@@ -1,0 +1,7 @@
+SE FOR RODAR O CODIGO PRECISA TER PYTHON INSTALADO NA MAQUINA
+======= ABAIXE ("pip install") ======
+- customtkinter
+- pillow
+- yt_dlp
+- requests
+

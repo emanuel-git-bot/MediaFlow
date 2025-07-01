@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR" class="dark">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediaFlow - Baixador de Mídia</title>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+      body {
+        font-family: "Poppins", sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .toggle-checkbox:checked {
+        right: 0;
+        border-color: #68d391;
+      }
+
+      .toggle-checkbox:checked + .toggle-label {
+        background-color: #68d391;
+      }
+
+      .media-option {
+        transition: all 0.3s ease;
+      }
+
+      .media-option:hover {
+        transform: translateY(-5px);
+      }
+
+      .resolution-option {
+        transition: all 0.2s ease;
+      }
+
+      .resolution-option:hover:not(.selected) {
+        background-color: rgba(99, 102, 241, 0.1);
+      }
+
+      .format-option {
+        transition: all 0.2s ease;
+      }
+
+      .format-option:hover:not(.selected) {
+        background-color: rgba(99, 102, 241, 0.1);
+      }
+
+      .extension-option {
+        transition: all 0.2s ease;
+      }
+
+      .extension-option:hover:not(.selected) {
+        background-color: rgba(99, 102, 241, 0.1);
+      }
+
+      .download-btn {
+        transition: all 0.3s ease;
+      }
+
+      .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .download-btn:active {
+        transform: translateY(0);
+      }
+
+      *,
+      ::before,
+      ::after {
+        --tw-border-spacing-x: 0;
+        --tw-border-spacing-y: 0;
+        --tw-translate-x: 0;
+        --tw-translate-y: 0;
+        --tw-rotate: 0;
+        --tw-skew-x: 0;
+        --tw-skew-y: 0;
+        --tw-scale-x: 1;
+        --tw-scale-y: 1;
+        --tw-pan-x: ;
+        --tw-pan-y: ;
+        --tw-pinch-zoom: ;
+        --tw-scroll-snap-strictness: proximity;
+        --tw-gradient-from-position: ;
+        --tw-gradient-via-position: ;
+        --tw-gradient-to-position: ;
+        --tw-ordinal: ;
+        --tw-slashed-zero: ;
+        --tw-numeric-figure: ;
+        --tw-numeric-spacing: ;
+        --tw-numeric-fraction: ;
+        --tw-ring-inset: ;
+        --tw-ring-offset-width: 0px;
+        --tw-ring-offset-color: #fff;
+        --tw-ring-color: rgb(59 130 246 / 0.5);
+        --tw-ring-offset-shadow: 0 0 #0000;
+        --tw-ring-shadow: 0 0 #0000;
+        --tw-shadow: 0 0 #0000;
+        --tw-shadow-colored: 0 0 #0000;
+        --tw-blur: ;
+        --tw-brightness: ;
+        --tw-contrast: ;
+        --tw-grayscale: ;
+        --tw-hue-rotate: ;
+        --tw-invert: ;
+        --tw-saturate: ;
+        --tw-sepia: ;
+        --tw-drop-shadow: ;
+        --tw-backdrop-blur: ;
+        --tw-backdrop-brightness: ;
+        --tw-backdrop-contrast: ;
+        --tw-backdrop-grayscale: ;
+        --tw-backdrop-hue-rotate: ;
+        --tw-backdrop-invert: ;
+        --tw-backdrop-opacity: ;
+        --tw-backdrop-saturate: ;
+        --tw-backdrop-sepia: ;
+        --tw-contain-size: ;
+        --tw-contain-layout: ;
+        --tw-contain-paint: ;
+        --tw-contain-style: ;
+      }
+      ::backdrop {
+        --tw-border-spacing-x: 0;
+        --tw-border-spacing-y: 0;
+        --tw-translate-x: 0;
+        --tw-translate-y: 0;
+        --tw-rotate: 0;
+        --tw-skew-x: 0;
+        --tw-skew-y: 0;
+        --tw-scale-x: 1;
+        --tw-scale-y: 1;
+        --tw-pan-x: ;
+        --tw-pan-y: ;
+        --tw-pinch-zoom: ;
+        --tw-scroll-snap-strictness: proximity;
+        --tw-gradient-from-position: ;
+        --tw-gradient-via-position: ;
+        --tw-gradient-to-position: ;
+        --tw-ordinal: ;
+        --tw-slashed-zero: ;
+        --tw-numeric-figure: ;
+        --tw-numeric-spacing: ;
+        --tw-numeric-fraction: ;
+        --tw-ring-inset: ;
+        --tw-ring-offset-width: 0px;
+        --tw-ring-offset-color: #fff;
+        --tw-ring-color: rgb(59 130 246 / 0.5);
+        --tw-ring-offset-shadow: 0 0 #0000;
+        --tw-ring-shadow: 0 0 #0000;
+        --tw-shadow: 0 0 #0000;
+        --tw-shadow-colored: 0 0 #0000;
+        --tw-blur: ;
+        --tw-brightness: ;
+        --tw-contrast: ;
+        --tw-grayscale: ;
+        --tw-hue-rotate: ;
+        --tw-invert: ;
+        --tw-saturate: ;
+        --tw-sepia: ;
+        --tw-drop-shadow: ;
+        --tw-backdrop-blur: ;
+        --tw-backdrop-brightness: ;
+        --tw-backdrop-contrast: ;
+        --tw-backdrop-grayscale: ;
+        --tw-backdrop-hue-rotate: ;
+        --tw-backdrop-invert: ;
+        --tw-backdrop-opacity: ;
+        --tw-backdrop-saturate: ;
+        --tw-backdrop-sepia: ;
+        --tw-contain-size: ;
+        --tw-contain-layout: ;
+        --tw-contain-paint: ;
+        --tw-contain-style: ;
+      } /* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */
+      *,
+      ::after,
+      ::before {
+        box-sizing: border-box;
+        border-width: 0;
+        border-style: solid;
+        border-color: #e5e7eb;
+      }
+      ::after,
+      ::before {
+        --tw-content: "";
+      }
+      :host,
+      html {
+        line-height: 1.5;
+        -webkit-text-size-adjust: 100%;
+        -moz-tab-size: 4;
+        tab-size: 4;
+        font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+          "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-feature-settings: normal;
+        font-variation-settings: normal;
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        margin: 0;
+        line-height: inherit;
+      }
+      hr {
+        height: 0;
+        color: inherit;
+        border-top-width: 1px;
+      }
+      abbr:where([title]) {
+        -webkit-text-decoration: underline dotted;
+        text-decoration: underline dotted;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-size: inherit;
+        font-weight: inherit;
+      }
+      a {
+        color: inherit;
+        text-decoration: inherit;
+      }
+      b,
+      strong {
+        font-weight: bolder;
+      }
+      code,
+      kbd,
+      pre,
+      samp {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-feature-settings: normal;
+        font-variation-settings: normal;
+        font-size: 1em;
+      }
+      small {
+        font-size: 80%;
+      }
+      sub,
+      sup {
+        font-size: 75%;
+        line-height: 0;
+        position: relative;
+        vertical-align: baseline;
+      }
+      sub {
+        bottom: -0.25em;
+      }
+      sup {
+        top: -0.5em;
+      }
+      table {
+        text-indent: 0;
+        border-color: inherit;
+        border-collapse: collapse;
+      }
+      button,
+      input,
+      optgroup,
+      select,
+      textarea {
+        font-family: inherit;
+        font-feature-settings: inherit;
+        font-variation-settings: inherit;
+        font-size: 100%;
+        font-weight: inherit;
+        line-height: inherit;
+        letter-spacing: inherit;
+        color: inherit;
+        margin: 0;
+        padding: 0;
+      }
+      button,
+      select {
+        text-transform: none;
+      }
+      button,
+      input:where([type="button"]),
+      input:where([type="reset"]),
+      input:where([type="submit"]) {
+        -webkit-appearance: button;
+        background-color: transparent;
+        background-image: none;
+      }
+      :-moz-focusring {
+        outline: auto;
+      }
+      :-moz-ui-invalid {
+        box-shadow: none;
+      }
+      progress {
+        vertical-align: baseline;
+      }
+      ::-webkit-inner-spin-button,
+      ::-webkit-outer-spin-button {
+        height: auto;
+      }
+      [type="search"] {
+        -webkit-appearance: textfield;
+        outline-offset: -2px;
+      }
+      ::-webkit-search-decoration {
+        -webkit-appearance: none;
+      }
+      ::-webkit-file-upload-button {
+        -webkit-appearance: button;
+        font: inherit;
+      }
+      summary {
+        display: list-item;
+      }
+      blockquote,
+      dd,
+      dl,
+      figure,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      hr,
+      p,
+      pre {
+        margin: 0;
+      }
+      fieldset {
+        margin: 0;
+        padding: 0;
+      }
+      legend {
+        padding: 0;
+      }
+      menu,
+      ol,
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      dialog {
+        padding: 0;
+      }
+      textarea {
+        resize: vertical;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        opacity: 1;
+        color: #9ca3af;
+      }
+      [role="button"],
+      button {
+        cursor: pointer;
+      }
+      :disabled {
+        cursor: default;
+      }
+      audio,
+      canvas,
+      embed,
+      iframe,
+      img,
+      object,
+      svg,
+      video {
+        display: block;
+        vertical-align: middle;
+      }
+      img,
+      video {
+        max-width: 100%;
+        height: auto;
+      }
+      [hidden]:where(:not([hidden="until-found"])) {
+        display: none;
+      }
+      .container {
+        width: 100%;
+      }
+      @media (min-width: 640px) {
+        .container {
+          max-width: 640px;
+        }
+      }
+      @media (min-width: 768px) {
+        .container {
+          max-width: 768px;
+        }
+      }
+      @media (min-width: 1024px) {
+        .container {
+          max-width: 1024px;
+        }
+      }
+      @media (min-width: 1280px) {
+        .container {
+          max-width: 1280px;
+        }
+      }
+      @media (min-width: 1536px) {
+        .container {
+          max-width: 1536px;
+        }
+      }
+      .absolute {
+        position: absolute;
+      }
+      .relative {
+        position: relative;
+      }
+      .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .mb-10 {
+        margin-bottom: 2.5rem;
+      }
+      .mb-2 {
+        margin-bottom: 0.5rem;
+      }
+      .mb-4 {
+        margin-bottom: 1rem;
+      }
+      .mb-6 {
+        margin-bottom: 1.5rem;
+      }
+      .mb-8 {
+        margin-bottom: 2rem;
+      }
+      .ml-2 {
+        margin-left: 0.5rem;
+      }
+      .ml-auto {
+        margin-left: auto;
+      }
+      .mr-2 {
+        margin-right: 0.5rem;
+      }
+      .mr-3 {
+        margin-right: 0.75rem;
+      }
+      .mr-4 {
+        margin-right: 1rem;
+      }
+      .mt-10 {
+        margin-top: 2.5rem;
+      }
+      .block {
+        display: block;
+      }
+      .inline-block {
+        display: inline-block;
+      }
+      .flex {
+        display: flex;
+      }
+      .inline-flex {
+        display: inline-flex;
+      }
+      .grid {
+        display: grid;
+      }
+      .h-10 {
+        height: 2.5rem;
+      }
+      .h-3 {
+        height: 0.75rem;
+      }
+      .h-5 {
+        height: 1.25rem;
+      }
+      .h-6 {
+        height: 1.5rem;
+      }
+      .h-8 {
+        height: 2rem;
+      }
+      .min-h-screen {
+        min-height: 100vh;
+      }
+      .w-10 {
+        width: 2.5rem;
+      }
+      .w-12 {
+        width: 3rem;
+      }
+      .w-3 {
+        width: 0.75rem;
+      }
+      .w-5 {
+        width: 1.25rem;
+      }
+      .w-6 {
+        width: 1.5rem;
+      }
+      .w-8 {
+        width: 2rem;
+      }
+      .max-w-5xl {
+        max-width: 64rem;
+      }
+      .flex-grow {
+        flex-grow: 1;
+      }
+      .cursor-pointer {
+        cursor: pointer;
+      }
+      .select-none {
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      .appearance-none {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      .grid-cols-1 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      .grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .items-center {
+        align-items: center;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+      .justify-between {
+        justify-content: space-between;
+      }
+      .gap-3 {
+        gap: 0.75rem;
+      }
+      .gap-4 {
+        gap: 1rem;
+      }
+      .overflow-hidden {
+        overflow: hidden;
+      }
+      .rounded-full {
+        border-radius: 9999px;
+      }
+      .rounded-lg {
+        border-radius: 0.5rem;
+      }
+      .rounded-xl {
+        border-radius: 0.75rem;
+      }
+      .rounded-l-lg {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+      }
+      .rounded-r-lg {
+        border-top-right-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+      }
+      .border {
+        border-width: 1px;
+      }
+      .border-2 {
+        border-width: 2px;
+      }
+      .border-4 {
+        border-width: 4px;
+      }
+      .border-gray-200 {
+        --tw-border-opacity: 1;
+        border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
+      }
+      .border-gray-300 {
+        --tw-border-opacity: 1;
+        border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+      }
+      .border-indigo-200 {
+        --tw-border-opacity: 1;
+        border-color: rgb(199 210 254 / var(--tw-border-opacity, 1));
+      }
+      .border-indigo-500 {
+        --tw-border-opacity: 1;
+        border-color: rgb(99 102 241 / var(--tw-border-opacity, 1));
+      }
+      .border-indigo-600 {
+        --tw-border-opacity: 1;
+        border-color: rgb(79 70 229 / var(--tw-border-opacity, 1));
+      }
+      .bg-gray-50 {
+        --tw-bg-opacity: 1;
+        background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
+      }
+      .bg-gray-100 {
+        --tw-bg-opacity: 1;
+        background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+      }
+      .bg-gray-300 {
+        --tw-bg-opacity: 1;
+        background-color: rgb(209 213 219 / var(--tw-bg-opacity, 1));
+      }
+      .bg-indigo-100 {
+        --tw-bg-opacity: 1;
+        background-color: rgb(224 231 255 / var(--tw-bg-opacity, 1));
+      }
+      .bg-indigo-50 {
+        --tw-bg-opacity: 1;
+        background-color: rgb(238 242 255 / var(--tw-bg-opacity, 1));
+      }
+      .bg-indigo-600 {
+        --tw-bg-opacity: 1;
+        background-color: rgb(79 70 229 / var(--tw-bg-opacity, 1));
+      }
+      .bg-white {
+        --tw-bg-opacity: 1;
+        background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+      }
+      .bg-gradient-to-br {
+        background-image: linear-gradient(
+          to bottom right,
+          var(--tw-gradient-stops)
+        );
+      }
+      .bg-gradient-to-r {
+        background-image: linear-gradient(to right, var(--tw-gradient-stops));
+      }
+      .from-indigo-50 {
+        --tw-gradient-from: #eef2ff var(--tw-gradient-from-position);
+        --tw-gradient-to: rgb(238 242 255 / 0) var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+      }
+      .from-indigo-600 {
+        --tw-gradient-from: #4f46e5 var(--tw-gradient-from-position);
+        --tw-gradient-to: rgb(79 70 229 / 0) var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+      }
+      .to-blue-50 {
+        --tw-gradient-to: #eff6ff var(--tw-gradient-to-position);
+      }
+      .to-purple-600 {
+        --tw-gradient-to: #9333ea var(--tw-gradient-to-position);
+      }
+      .bg-clip-text {
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+      .p-3 {
+        padding: 0.75rem;
+      }
+      .p-6 {
+        padding: 1.5rem;
+      }
+      .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .px-8 {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+      .py-3 {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+      .py-8 {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .align-middle {
+        vertical-align: middle;
+      }
+      .text-2xl {
+        font-size: 1.5rem;
+        line-height: 2rem;
+      }
+      .text-3xl {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+      }
+      .text-lg {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+      }
+      .text-sm {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+      .font-medium {
+        font-weight: 500;
+      }
+      .font-semibold {
+        font-weight: 600;
+      }
+      .text-gray-800 {
+        --tw-text-opacity: 1;
+        color: rgb(31 41 55 / var(--tw-text-opacity, 1));
+      }
+      .text-gray-500 {
+        --tw-text-opacity: 1;
+        color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+      }
+      .text-gray-600 {
+        --tw-text-opacity: 1;
+        color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+      }
+      .text-gray-700 {
+        --tw-text-opacity: 1;
+        color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+      }
+      .text-indigo-600 {
+        --tw-text-opacity: 1;
+        color: rgb(79 70 229 / var(--tw-text-opacity, 1));
+      }
+      .text-indigo-700 {
+        --tw-text-opacity: 1;
+        color: rgb(67 56 202 / var(--tw-text-opacity, 1));
+      }
+      .text-transparent {
+        color: transparent;
+      }
+      .text-white {
+        --tw-text-opacity: 1;
+        color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+      }
+      .shadow-lg {
+        --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+          0 4px 6px -4px var(--tw-shadow-color);
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+          var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+      }
+      .transition-colors {
+        transition-property: color, background-color, border-color, fill, stroke,
+          -webkit-text-decoration-color;
+        transition-property: color, background-color, border-color,
+          text-decoration-color, fill, stroke;
+        transition-property: color, background-color, border-color,
+          text-decoration-color, fill, stroke, -webkit-text-decoration-color;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+      }
+      .hover\:bg-indigo-700:hover {
+        --tw-bg-opacity: 1;
+        background-color: rgb(67 56 202 / var(--tw-bg-opacity, 1));
+      }
+      .hover\:from-indigo-700:hover {
+        --tw-gradient-from: #4338ca var(--tw-gradient-from-position);
+        --tw-gradient-to: rgb(67 56 202 / 0) var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+      }
+      .hover\:to-purple-700:hover {
+        --tw-gradient-to: #7e22ce var(--tw-gradient-to-position);
+      }
+      .focus\:outline-none:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+      .focus\:ring-2:focus {
+        --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+          var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+        --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+          calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+          var(--tw-shadow, 0 0 #0000);
+      }
+      .focus\:ring-indigo-500:focus {
+        --tw-ring-opacity: 1;
+        --tw-ring-color: rgb(99 102 241 / var(--tw-ring-opacity, 1));
+      }
+      @media (min-width: 640px) {
+        .sm\:grid-cols-3 {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      @media (min-width: 768px) {
+        .md\:grid-cols-2 {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .md\:grid-cols-4 {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .md\:p-10 {
+          padding: 2.5rem;
+        }
+      }
+      @media (min-width: 1024px) {
+        .lg\:grid-cols-6 {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        .dark\:border-gray-600 {
+          --tw-border-opacity: 1;
+          border-color: rgb(75 85 99 / var(--tw-border-opacity, 1));
+        }
+        .dark\:border-gray-700 {
+          --tw-border-opacity: 1;
+          border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
+        }
+        .dark\:border-indigo-400 {
+          --tw-border-opacity: 1;
+          border-color: rgb(129 140 248 / var(--tw-border-opacity, 1));
+        }
+        .dark\:border-indigo-500 {
+          --tw-border-opacity: 1;
+          border-color: rgb(99 102 241 / var(--tw-border-opacity, 1));
+        }
+        .dark\:border-indigo-800 {
+          --tw-border-opacity: 1;
+          border-color: rgb(55 48 163 / var(--tw-border-opacity, 1));
+        }
+        .dark\:bg-gray-900 {
+          --tw-bg-opacity: 1;
+          background-color: rgb(17 24 39 / var(--tw-bg-opacity, 1));
+        }
+        .dark\:bg-gray-700 {
+          --tw-bg-opacity: 1;
+          background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
+        }
+        .dark\:bg-gray-800 {
+          --tw-bg-opacity: 1;
+          background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
+        }
+        .dark\:bg-indigo-400 {
+          --tw-bg-opacity: 1;
+          background-color: rgb(129 140 248 / var(--tw-bg-opacity, 1));
+        }
+        .dark\:bg-indigo-800\/50 {
+          background-color: rgb(55 48 163 / 0.5);
+        }
+        .dark\:bg-indigo-900\/30 {
+          background-color: rgb(49 46 129 / 0.3);
+        }
+        .dark\:from-indigo-400 {
+          --tw-gradient-from: #818cf8 var(--tw-gradient-from-position);
+          --tw-gradient-to: rgb(129 140 248 / 0) var(--tw-gradient-to-position);
+          --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+        }
+        .dark\:from-indigo-900\/30 {
+          --tw-gradient-from: rgb(49 46 129 / 0.3)
+            var(--tw-gradient-from-position);
+          --tw-gradient-to: rgb(49 46 129 / 0) var(--tw-gradient-to-position);
+          --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+        }
+        .dark\:to-blue-900\/30 {
+          --tw-gradient-to: rgb(30 58 138 / 0.3) var(--tw-gradient-to-position);
+        }
+        .dark\:to-purple-400 {
+          --tw-gradient-to: #c084fc var(--tw-gradient-to-position);
+        }
+        .dark\:text-gray-100 {
+          --tw-text-opacity: 1;
+          color: rgb(243 244 246 / var(--tw-text-opacity, 1));
+        }
+        .dark\:text-gray-300 {
+          --tw-text-opacity: 1;
+          color: rgb(209 213 219 / var(--tw-text-opacity, 1));
+        }
+        .dark\:text-gray-400 {
+          --tw-text-opacity: 1;
+          color: rgb(156 163 175 / var(--tw-text-opacity, 1));
+        }
+        .dark\:text-indigo-400 {
+          --tw-text-opacity: 1;
+          color: rgb(129 140 248 / var(--tw-text-opacity, 1));
+        }
+        .dark\:text-white {
+          --tw-text-opacity: 1;
+          color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+        }
+      }
+      .animate-spin {
+        animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      #search-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      #search-btn:disabled:hover {
+        background-color: rgb(79 70 229);
+      }
+
+      #search-icon,
+      #loading-spinner {
+        transition: opacity 0.2s ease-in-out;
+      }
+
+      .hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #loading-spinner svg {
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+      }
+
+      /* Adicione estas classes para transições suaves */
+      .video-options,
+      .audio-options {
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 1000px; /* Altura máxima para a animação */
+        overflow: hidden;
+      }
+
+      .video-options.hidden,
+      .audio-options.hidden {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+        pointer-events: none;
+      }
+
+      /* Adicione uma transição suave para o bloco de informações do vídeo */
+      #video-info {
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      #video-info.hidden {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+      }
+
+      /* Atualize as classes de transição */
+      #media-type-block,
+      #video-options,
+      #audio-options,
+      #download-block {
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      #media-type-block.hidden,
+      #video-options.hidden,
+      #audio-options.hidden,
+      #download-block.hidden {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        display: none;
+      }
+
+      /* Adicione uma transição suave para o bloco de informações do vídeo */
+      #video-info {
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      #video-info.hidden {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        display: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 min-h-screen"
+  >
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+      <!-- Header -->
+      <header class="flex justify-between items-center mb-10">
+        <div class="flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-10 w-10 text-indigo-600 dark:text-indigo-400"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          <h1
+            class="text-3xl font-bold ml-2 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-transparent bg-clip-text"
+          >
+            MediaFlow
+          </h1>
+        </div>
+
+        <!-- Dark Mode Toggle -->
+        <div class="flex items-center">
+          <span
+            class="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+              ></path>
+            </svg>
+          </span>
+          <div class="relative inline-block w-12 mr-2 align-middle select-none">
+            <input
+              type="checkbox"
+              id="toggle"
+              class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            />
+            <label
+              for="toggle"
+              class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+            ></label>
+          </div>
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </span>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-10">
+        <h2 class="text-2xl font-semibold mb-6 text-center">Baixar Mídia</h2>
+
+        <!-- URL Input -->
+        <div class="mb-8">
+          <label for="url" class="block text-sm font-medium mb-2"
+            >URL da mídia</label
+          >
+          <div class="flex">
+            <input
+              type="text"
+              id="url"
+              placeholder="Cole o link do vídeo ou música aqui"
+              class="flex-grow px-4 py-3 rounded-l-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+            />
+            <button
+              id="search-btn"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-r-lg transition-colors relative"
+            >
+              <div id="search-icon" class="flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                id="loading-spinner"
+                class="hidden absolute inset-0 flex items-center justify-center" style="top: 30%"
+              >
+                <svg
+                  class="animate-spin h-5 w-5 text-white"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
+                  >
+                    <animateTransform
+                      attributeName="transform"
+                      attributeType="XML"
+                      type="rotate"
+                      from="0 12 12"
+                      to="360 12 12"
+                      dur="0.6s"
+                      repeatCount="indefinite"
+                    />
+                  </path>
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Video Info -->
+        <div id="video-info" class="mb-8 hidden ">
+          <div class="flex items-center  space-x-4">
+            <img
+              width="300px"
+              id="thumbnail"
+              src=""
+              alt="Thumbnail"
+              class="w-32 h-24 object-cover rounded-lg"
+            />
+            <div>
+              <h3 id="video-title" class="text-lg font-semibold"></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Media Type Selection -->
+        <div id="media-type-block" class="mb-8 hidden">
+          <h3 class="text-lg font-medium mb-4">Tipo de mídia</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div
+              id="video-option"
+              class="media-option p-6 rounded-xl border-2 cursor-pointer flex items-center selected bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 border-indigo-200 dark:border-indigo-800"
+              data-media-type="video"
+            >
+              <div
+                class="bg-indigo-100 dark:bg-indigo-800/50 p-3 rounded-full mr-4"
+              >
+                <div
+                  class="h-3 w-3 rounded-full bg-indigo-600 dark:bg-indigo-400"
+                ></div>
+              </div>
+              <div>
+                <h4 class="font-semibold text-lg flex">
+                  <svg
+                    style="width: 20px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122"
+                    />
+                  </svg>
+                  Vídeo
+                </h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  Baixe vídeos em diferentes formatos
+                </p>
+              </div>
+              <div class="ml-auto">
+                <div
+                  class="h-6 w-6 rounded-full border-2 border-indigo-600 dark:border-indigo-400 flex items-center justify-center"
+                >
+                  <div
+                    class="h-3 w-3 rounded-full bg-indigo-600 dark:bg-indigo-400"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="audio-option"
+              class="media-option p-6 rounded-xl border-2 cursor-pointer flex items-center bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+              data-media-type="audio"
+            >
+              <div
+                class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full mr-4"
+              ></div>
+              <div>
+                <h4 class="font-semibold text-lg flex">
+                  <svg
+                    style="width: 20px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    class="size-5"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M17.721 1.599a.75.75 0 0 1 .279.583v11.29a2.25 2.25 0 0 1-1.774 2.2l-2.041.44a2.216 2.216 0 0 1-.938-4.332l2.662-.577a.75.75 0 0 0 .591-.733V6.112l-8 1.73v7.684a2.25 2.25 0 0 1-1.774 2.2l-2.042.44a2.216 2.216 0 1 1-.935-4.331l2.659-.573A.75.75 0 0 0 7 12.529V4.236a.75.75 0 0 1 .591-.733l9.5-2.054a.75.75 0 0 1 .63.15Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Música
+                </h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  Extraia apenas o áudio
+                </p>
+              </div>
+              <div class="ml-auto">
+                <div
+                  class="h-6 w-6 rounded-full border-2 border-gray-300 dark:border-gray-600"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloco de Opções de Vídeo -->
+        <div id="video-options" class="hidden">
+          <div class="mb-8">
+            <h3 class="text-lg font-medium mb-4">Resolução</h3>
+            <div
+              id="resolutions-container"
+              class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3"
+            >
+              <!-- Os blocos serão inseridos aqui via JS -->
+            </div>
+          </div>
+
+          <!-- Extension Selection -->
+          <div class="mb-8">
+            <h3 class="text-lg font-medium mb-4">Extensão</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <div
+                class="extension-option selected bg-indigo-50 dark:bg-indigo-900/30 border-2 border-indigo-500 dark:border-indigo-500 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span
+                  class="block text-sm font-medium text-indigo-700 dark:text-indigo-400"
+                  >MP4</span
+                >
+              </div>
+              <div
+                class="extension-option bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span class="block text-sm">WebM</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Format Selection -->
+          <div class="mb-10">
+            <h3 class="text-lg font-medium mb-4">Formato</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <div
+                class="format-option bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span class="block text-sm">AVC1</span>
+              </div>
+              <div
+                class="format-option selected bg-indigo-50 dark:bg-indigo-900/30 border-2 border-indigo-500 dark:border-indigo-500 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span
+                  class="block text-sm font-medium text-indigo-700 dark:text-indigo-400"
+                  >VP09</span
+                >
+              </div>
+              <div
+                class="format-option bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span class="block text-sm">VP9</span>
+              </div>
+              <div
+                class="format-option bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span class="block text-sm">AVC1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloco de Opções de Música -->
+        <div id="audio-options" class="hidden">
+          <div class="mb-10">
+            <h3 class="text-lg font-medium mb-4">Qualidade</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <div
+                class="format-option bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span class="block text-sm">Low (64k)</span>
+              </div>
+              <div
+                class="format-option selected bg-indigo-50 dark:bg-indigo-900/30 border-2 border-indigo-500 dark:border-indigo-500 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span
+                  class="block text-sm font-medium text-indigo-700 dark:text-indigo-400"
+                  >Medium (128k)</span
+                >
+              </div>
+              <div
+                class="format-option bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center cursor-pointer"
+              >
+                <span class="block text-sm">High</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <style>
+          .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+          }
+
+          .progress-fill {
+            height: 100%;
+            background-color: #4caf50;
+            transition: width 0.3s ease;
+          }
+
+          .progress-info {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+          }
+        </style>
+        <!-- Bloco do Botão de Download -->
+        <div id="download-block" class="hidden mt-8">
+          <!-- Download Button -->
+          <div class="text-center">
+            <button
+              id="download-btn"
+              class="download-btn bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-3 px-8 rounded-full shadow-lg inline-flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              Baixar Agora
+            </button>
+          </div>
+
+          <!-- Progresso do Download -->
+          <div id="download-progress" class="hidden mt-4">
+            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+              <div class="flex items-center justify-center">
+                <div id="loading-spinner" class="animate-spin h-8 w-8 mr-3">
+                  <svg class="text-indigo-600" viewBox="0 0 24 24">
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      fill="none"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                </div>
+
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="progress-container" style="display: none">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="progress-info">
+          <span id="percent">0%</span> | <span id="speed">0 kB/s</span> |
+          <span id="eta">ETA: --</span> |
+          <span id="downloaded">0MB</span>
+        </div>
+        <div id="download-link" style="display: none">
+          <a
+            id="completed-link"
+            style="display: none"
+            onclick="downloadFile(event)"
+            >Download Pronto!</a
+          >
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer
+        class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400"
+      >
+        <p>© 2025 MediaFlow - Baixador de Mídia</p>
+      </footer>
+    </div>
+
+    <script>
+  function ajustarLayoutPorResolucao() {
+    const videoInfo = document.getElementById("video-info");
+    const innerDiv = videoInfo.querySelector(".space-x-4");
+
+    if (window.innerWidth < 567) {
+      // Aplica as classes no video-info
+      videoInfo.classList.add("flex", "items-center");
+
+      // Remove do innerDiv se existir
+      if (innerDiv) {
+        innerDiv.classList.remove("flex", "items-center");
+      }
+    } else {
+      // Remove do video-info
+      videoInfo.classList.remove("flex", "items-center");
+
+      // Adiciona ao innerDiv
+      if (innerDiv) {
+        innerDiv.classList.add("flex", "items-center");
+      }
+    }
+  }
+
+  // Executa ao carregar
+  window.addEventListener("load", ajustarLayoutPorResolucao);
+
+  // Executa ao redimensionar
+  window.addEventListener("resize", ajustarLayoutPorResolucao);
+</script>
+
+
+
+    <script>
+      // Função para verificar se um elemento existe
+      function getElement(id) {
+        const element = document.getElementById(id);
+        if (!element) {
+          console.error(`Elemento com ID '${id}' não encontrado`);
+          return null;
+        }
+        return element;
+      }
+
+      // Função para esconder todos os blocos
+      function hideAllBlocks() {
+        const blocks = [
+          "media-type-block",
+          "video-options",
+          "audio-options",
+          "download-block",
+          "video-info",
+        ];
+
+        blocks.forEach((blockId) => {
+          const element = getElement(blockId);
+          if (element) {
+            element.classList.add("hidden");
+          }
+        });
+      }
+
+      // Atualize a função de busca
+      document
+        .getElementById("search-btn")
+        .addEventListener("click", async function () {
+          const urlInput = getElement("url");
+          if (!urlInput) {
+            console.error("Campo de URL não encontrado");
+            return;
+          }
+
+          const url = urlInput.value;
+          if (!url) {
+            alert("Por favor, insira uma URL válida.");
+            return;
+          }
+
+          // Desabilita o botão e mostra o spinner
+          const searchBtn = this;
+          const searchIcon = getElement("search-icon");
+          const loadingSpinner = getElement("loading-spinner");
+
+          if (!searchIcon || !loadingSpinner) {
+            console.error("Elementos do botão de busca não encontrados");
+            return;
+          }
+
+          searchBtn.disabled = true;
+          searchIcon.classList.add("hidden");
+          loadingSpinner.classList.remove("hidden");
+
+          try {
+            console.log("Iniciando busca para URL:", url);
+            const response = await fetch(
+              `/get-video-info/?url=${encodeURIComponent(url)}`
+            );
+            console.log("Resposta recebida:", response);
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Dados recebidos:", data);
+
+            if (data.error) {
+              throw new Error(data.error);
+            }
+
+            // Mostra as informações do vídeo
+            const videoInfo = getElement("video-info");
+            const thumbnail = getElement("thumbnail");
+            const videoTitle = getElement("video-title");
+
+            if (videoInfo && thumbnail && videoTitle) {
+              videoInfo.classList.remove("hidden");
+              thumbnail.src = data.thumbnail_url;
+              videoTitle.textContent = data.title;
+            }
+
+            // Mostra os blocos de opções
+            const mediaTypeBlock = getElement("media-type-block");
+            const videoOptions = getElement("video-options");
+            const downloadBlock = getElement("download-block");
+
+            if (mediaTypeBlock) mediaTypeBlock.classList.remove("hidden");
+            if (videoOptions) videoOptions.classList.remove("hidden");
+            if (downloadBlock) downloadBlock.classList.remove("hidden");
+
+            resolucoes = data.lista_Resolucion;
+            limparResolutionsContainer();
+            CriarResoucion(resolucoes);
+
+            // Adiciona event listeners para os botões de resolução
+            const resolutionButtons =
+              document.querySelectorAll(".resolution-option");
+            resolutionButtons.forEach((button) => {
+              button.addEventListener("click", function () {
+                selectResolution(this);
+              });
+            });
+
+            // Atualiza a seleção visual
+            updateMediaSelection(true);
+          } catch (error) {
+            console.error("Erro detalhado:", error);
+            let errorMessage = "Erro ao processar a requisição";
+
+            if (error.message.includes("HTTP error")) {
+              errorMessage =
+                "Erro na comunicação com o servidor. Por favor, tente novamente.";
+            } else if (error.message.includes("Failed to fetch")) {
+              errorMessage =
+                "Não foi possível conectar ao servidor. Verifique sua conexão.";
+            } else if (error.message) {
+              errorMessage = error.message;
+            }
+
+            alert(errorMessage);
+            hideAllBlocks();
+          } finally {
+            // Reabilita o botão e esconde o spinner
+            searchBtn.disabled = false;
+            if (searchIcon) searchIcon.classList.remove("hidden");
+            if (loadingSpinner) loadingSpinner.classList.add("hidden");
+          }
+        });
+
+      function CriarResoucion(resolucão) {
+        const container = document.getElementById("resolutions-container");
+
+        tamanho_da_lista = resolucão.length - 1;
+
+        resolucão.forEach((resolucao) => {
+          const resolutionDiv = document.createElement("div");
+
+          // Verifica se é 4K para aplicar classe de destaque
+
+          const isSelected =
+            resolucao === parseInt(resolucão[tamanho_da_lista]);
+
+          resolutionDiv.className = isSelected
+            ? "resolution-option border-2 rounded-lg p-3 text-center cursor-pointer selected bg-indigo-50 dark:bg-indigo-900/30 border-indigo-500 dark:border-indigo-500"
+            : "resolution-option border-2 rounded-lg p-3 text-center cursor-pointer bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700";
+
+          const span = document.createElement("span");
+          span.className = isSelected
+            ? "block text-sm font-medium text-indigo-700 dark:text-indigo-400"
+            : "block text-sm";
+
+          span.textContent = `${resolucao}p`;
+
+          resolutionDiv.appendChild(span);
+          container.appendChild(resolutionDiv);
+        });
+      }
+      function limparResolutionsContainer() {
+        const container = document.getElementById("resolutions-container");
+        if (container) {
+          container.innerHTML = ""; // Limpa todo o conteúdo interno
+        }
+      }
+
+      // Função para atualizar a seleção
+      function updateMediaSelection(isVideo) {
+        const videoOption = getElement("video-option");
+        const audioOption = getElement("audio-option");
+        const videoOptions = getElement("video-options");
+        const audioOptions = getElement("audio-options");
+        const downloadBlock = getElement("download-block");
+
+        if (!videoOption || !audioOption || !videoOptions || !audioOptions) {
+          console.error("Elementos de seleção de mídia não encontrados");
+          return;
+        }
+
+        if (isVideo) {
+          // Seleciona opção de vídeo
+          videoOption.classList.add(
+            "selected",
+            "bg-gradient-to-br",
+            "from-indigo-50",
+            "to-blue-50",
+            "dark:from-indigo-900/30",
+            "dark:to-blue-900/30",
+            "border-indigo-200",
+            "dark:border-indigo-800"
+          );
+          videoOption.classList.remove(
+            "bg-white",
+            "dark:bg-gray-800",
+            "border-gray-200",
+            "dark:border-gray-700"
+          );
+
+          // Remove seleção de áudio
+          audioOption.classList.remove(
+            "selected",
+            "bg-gradient-to-br",
+            "from-indigo-50",
+            "to-blue-50",
+            "dark:from-indigo-900/30",
+            "dark:to-blue-900/30",
+            "border-indigo-200",
+            "dark:border-indigo-800"
+          );
+          audioOption.classList.add(
+            "bg-white",
+            "dark:bg-gray-800",
+            "border-gray-200",
+            "dark:border-gray-700"
+          );
+
+          // Mostra opções de vídeo e esconde opções de áudio
+          videoOptions.classList.remove("hidden");
+          audioOptions.classList.add("hidden");
+        } else {
+          // Seleciona opção de áudio
+          audioOption.classList.add(
+            "selected",
+            "bg-gradient-to-br",
+            "from-indigo-50",
+            "to-blue-50",
+            "dark:from-indigo-900/30",
+            "dark:to-blue-900/30",
+            "border-indigo-200",
+            "dark:border-indigo-800"
+          );
+          audioOption.classList.remove(
+            "bg-white",
+            "dark:bg-gray-800",
+            "border-gray-200",
+            "dark:border-gray-700"
+          );
+
+          // Remove seleção de vídeo
+          videoOption.classList.remove(
+            "selected",
+            "bg-gradient-to-br",
+            "from-indigo-50",
+            "to-blue-50",
+            "dark:from-indigo-900/30",
+            "dark:to-blue-900/30",
+            "border-indigo-200",
+            "dark:border-indigo-800"
+          );
+          videoOption.classList.add(
+            "bg-white",
+            "dark:bg-gray-800",
+            "border-gray-200",
+            "dark:border-gray-700"
+          );
+
+          // Mostra opções de áudio e esconde opções de vídeo
+          audioOptions.classList.remove("hidden");
+          videoOptions.classList.add("hidden");
+        }
+
+        // Mostra o bloco de download
+        if (downloadBlock) {
+          downloadBlock.classList.remove("hidden");
+        }
+      }
+
+      // Função para selecionar resolução
+      function selectResolution(element) {
+        // Remove a seleção de todos os botões de resolução
+        const allResolutions = document.querySelectorAll(".resolution-option");
+        allResolutions.forEach((resolution) => {
+          resolution.classList.remove(
+            "selected",
+            "bg-indigo-50",
+            "dark:bg-indigo-900/30",
+            "border-indigo-500",
+            "dark:border-indigo-500"
+          );
+          resolution.classList.add(
+            "bg-white",
+            "dark:bg-gray-800",
+            "border-gray-200",
+            "dark:border-gray-700"
+          );
+        });
+
+        // Adiciona a seleção ao botão clicado
+        element.classList.remove(
+          "bg-white",
+          "dark:bg-gray-800",
+          "border-gray-200",
+          "dark:border-gray-700"
+        );
+        element.classList.add(
+          "selected",
+          "bg-indigo-50",
+          "dark:bg-indigo-900/30",
+          "border-indigo-500",
+          "dark:border-indigo-500"
+        );
+      }
+
+      // Função para selecionar extensão
+      function selectExtension(element) {
+        // Remove a seleção de todos os botões de extensão
+        const allExtensions = document.querySelectorAll(".extension-option");
+        allExtensions.forEach((extension) => {
+          extension.classList.remove(
+            "selected",
+            "bg-indigo-50",
+            "dark:bg-indigo-900/30",
+            "border-indigo-500",
+            "dark:border-indigo-500"
+          );
+          extension.classList.add(
+            "bg-white",
+            "dark:bg-gray-800",
+            "border-gray-200",
+            "dark:border-gray-700"
+          );
+        });
+
+        // Adiciona a seleção ao botão clicado
+        element.classList.remove(
+          "bg-white",
+          "dark:bg-gray-800",
+          "border-gray-200",
+          "dark:border-gray-700"
+        );
+        element.classList.add(
+          "selected",
+          "bg-indigo-50",
+          "dark:bg-indigo-900/30",
+          "border-indigo-500",
+          "dark:border-indigo-500"
+        );
+      }
+
+      // Função para selecionar formato
+      function selectFormat(element) {
+        // Remove a seleção de todos os botões de formato
+        const allFormats = document.querySelectorAll(".format-option");
+        allFormats.forEach((format) => {
+          format.classList.remove(
+            "selected",
+            "bg-indigo-50",
+            "dark:bg-indigo-900/30",
+            "border-indigo-500",
+            "dark:border-indigo-500"
+          );
+          format.classList.add(
+            "bg-white",
+            "dark:bg-gray-800",
+            "border-gray-200",
+            "dark:border-gray-700"
+          );
+        });
+
+        // Adiciona a seleção ao botão clicado
+        element.classList.remove(
+          "bg-white",
+          "dark:bg-gray-800",
+          "border-gray-200",
+          "dark:border-gray-700"
+        );
+        element.classList.add(
+          "selected",
+          "bg-indigo-50",
+          "dark:bg-indigo-900/30",
+          "border-indigo-500",
+          "dark:border-indigo-500"
+        );
+      }
+
+      // Adicione os event listeners para os botões de seleção após o carregamento do DOM
+      document.addEventListener("DOMContentLoaded", function () {
+        const videoOption = getElement("video-option");
+        const audioOption = getElement("audio-option");
+
+        if (videoOption) {
+          videoOption.addEventListener("click", function () {
+            updateMediaSelection(true);
+          });
+        }
+
+        if (audioOption) {
+          audioOption.addEventListener("click", function () {
+            updateMediaSelection(false);
+          });
+        }
+
+        // Adiciona event listeners para os botões de extensão
+        const extensionButtons = document.querySelectorAll(".extension-option");
+        extensionButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            selectExtension(this);
+          });
+        });
+
+        // Adiciona event listeners para os botões de formato
+        const formatButtons = document.querySelectorAll(".format-option");
+        formatButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            selectFormat(this);
+          });
+        });
+      });
+
+      // Dark mode toggle
+      const toggle = document.getElementById("toggle");
+      const html = document.documentElement;
+
+      if (toggle) {
+        // Check for saved theme preference or use system preference
+        if (
+          localStorage.theme === "dark" ||
+          (!("theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          html.classList.add("dark");
+          toggle.checked = true;
+        } else {
+          html.classList.remove("dark");
+          toggle.checked = false;
+        }
+
+        // Toggle theme
+        toggle.addEventListener("change", function () {
+          if (this.checked) {
+            html.classList.add("dark");
+            localStorage.theme = "dark";
+          } else {
+            html.classList.remove("dark");
+            localStorage.theme = "light";
+          }
+        });
+      }
+      function startDownload() {
+        // Obtém as seleções atuais
+        const url = document.getElementById("url").value;
+        alert(url);
+        const isVideo = document
+          .getElementById("video-option")
+          .classList.contains("selected");
+        const selectedResolution = document.querySelector(
+          ".resolution-option.selected span"
+        )?.textContent;
+        const selectedExtension = document.querySelector(
+          ".extension-option.selected span"
+        )?.textContent;
+        const selectedFormat = document.querySelector(
+          ".format-option.selected span"
+        )?.textContent;
+
+        // Validações básicas
+        if (!selectedResolution || !selectedExtension || !selectedFormat) {
+          alert("Selecione todas as opções de formato");
+          return;
+        }
+
+        // Prepara os dados para envio (corrigido para usar downloadData)
+        const downloadData = {
+          url: url, // Supondo que a URL está disponível neste escopo
+          type: isVideo ? "video" : "audio",
+          resolution: selectedResolution.replace("p", ""), // Remove o 'p' da resolução
+          extension: selectedExtension.toLowerCase(), // Garante minúsculas
+          format: selectedFormat,
+        };
+
+        const progressContainer = document.getElementById("progress-container");
+        const progressFill = document.querySelector(".progress-fill");
+        const percentSpan = document.getElementById("percent");
+        const speedSpan = document.getElementById("speed"); // Corrigido
+        const etaSpan = document.getElementById("eta"); // Corrigido
+        const downloadLink = document.getElementById("download-link");
+
+        fetch("/download/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify(downloadData), // Usa o objeto corrigido
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("Erro na requisição");
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status === "download_started") {
+              progressContainer.style.display = "block";
+              const eventSource = new EventSource("/download_progress/");
+
+              eventSource.onmessage = function (e) {
+                const data = JSON.parse(e.data);
+                switch (data.status) {
+                  case "downloading":
+                  updateProgress(data);
+
+                    break;
+
+                  case "completed":
+                    
+                  updateProgress({ ...data, percent: 100 });
+            // Cria o link invisível para download
+            const tempLink = document.createElement('a');
+            tempLink.href = data.download_url;
+            tempLink.setAttribute('download', '');
+            tempLink.style.display = 'none';
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+            eventSource.close();
+                    
+                      break;
+                  case "error":
+                    eventSource.close();
+                    alert(`Erro: ${data.error}`);
+                    break;
+                }
+              };
+
+              eventSource.onerror = function (e) {
+                eventSource.close();
+                console.error("Erro na conexão SSE:", e);
+                alert("Conexão com o servidor perdida");
+              };
+            }
+          })
+          .catch((error) => {
+            console.error("Erro:", error);
+            alert("Falha ao iniciar download");
+          });
+      }
+
+      function updateProgress(data) {
+    const progressFill = document.querySelector('.progress-fill');
+    const percentSpan = document.getElementById('percent');
+    const speedSpan = document.getElementById('speed');
+    const etaSpan = document.getElementById('eta');
+    const downloadedSpan = document.getElementById('downloaded');
+    const downloadLink = document.getElementById('download-link');
+    const completedLink = document.getElementById('completed-link');
+    
+    if (data.status === 'downloading') {
+        // Atualiza a barra de progresso com animação suave
+        if (progressFill) {
+            progressFill.style.transition = 'width 0.3s ease-in-out';
+            progressFill.style.width = `${data.percent}%`;
+        }
+        
+        // Atualiza os textos com formatação melhorada
+        if (percentSpan) percentSpan.textContent = `${data.percent.toFixed(1)}%`;
+        if (speedSpan) speedSpan.textContent = data.speed;
+        if (etaSpan) etaSpan.textContent = `ETA: ${data.eta}`;
+        if (downloadedSpan) {
+            const total = data.total_mb !== 'N/A' ? ` / ${data.total_mb}MB` : '';
+            downloadedSpan.textContent = `${data.downloaded_mb}MB${total}`;
+        }
+
+        // Atualiza o título da página com o progresso
+        document.title = `Download: ${data.percent.toFixed(1)}% - MediaFlow`;
+    } else if (data.status === 'completed' || data.is_final) {
+        // Restaura o título original
+        document.title = 'MediaFlow - Baixador de Mídia';
+        
+        // Atualiza para 100%
+        if (progressFill) {
+            progressFill.style.width = '100%';
+            progressFill.style.backgroundColor = '#4CAF50'; // Verde para indicar conclusão
+        }
+        
+        // Atualiza todos os indicadores para mostrar conclusão
+        if (percentSpan) percentSpan.textContent = '100%';
+        if (speedSpan) speedSpan.textContent = data.speed || 'Completo';
+        if (etaSpan) etaSpan.textContent = data.eta || 'Concluído';
+        if (downloadedSpan) downloadedSpan.textContent = data.downloaded_mb || 'Finalizado';
+        
+        // Mostra o link de download
+        if (downloadLink && completedLink) {
+            downloadLink.style.display = 'block';
+            completedLink.style.display = 'block';
+            completedLink.href = data.download_url;
+            
+            // Adiciona uma animação suave para o link
+            completedLink.style.opacity = '0';
+            completedLink.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                completedLink.style.opacity = '1';
+            }, 100);
+        }
+        
+        // Inicia o download automaticamente
+        if (data.download_url) {
+            const tempLink = document.createElement('a');
+            tempLink.href = data.download_url;
+            tempLink.setAttribute('download', '');
+            tempLink.style.display = 'none';
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+        }
+    }
+}
+      // Adiciona o event listener para o botão de download
+      document
+        .getElementById("download-btn")
+        .addEventListener("click", startDownload);
+      
+    </script>
+    <script>
+      function downloadFile(event) {
+        try {
+          event.preventDefault();
+          const link = event.target;
+          const url = link.href;
+          
+
+          // Cria um link temporário
+          const tempLink = document.createElement("a");
+          tempLink.href = url;
+          tempLink.setAttribute("download", "");
+          tempLink.style.display = "none";
+
+          // Dispara o download
+          document.body.appendChild(tempLink);
+          tempLink.click();
+          document.body.removeChild(tempLink);
+        } catch (error) {
+          console.error("Erro no download:", error);
+          alert("Falha ao iniciar o download. Tente novamente.");
+        }
+        // Opcional: Fechar o modal ou limpar o estado
+        // document.getElementById('progress-container').style.display = 'none';
+      }
+    </script>
+
+    <iframe
+      height="1"
+      width="1"
+      style="
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        border: none;
+        visibility: hidden;
+      "
+    ></iframe>
+    <script></script>
+  </body>
+</html>
