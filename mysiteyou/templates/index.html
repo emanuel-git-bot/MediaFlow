@@ -1389,33 +1389,100 @@
             </div>
           </div>
         </div>
-      </main>
+              </main>
 
-      <div id="progress-container" style="display: none">
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: 0%"></div>
+        <div id="progress-container" style="display: none">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%"></div>
+          </div>
+          <div class="progress-info">
+            <span id="percent">0%</span> | <span id="speed">0 kB/s</span> |
+            <span id="eta">ETA: --</span> |
+            <span id="downloaded">0MB</span>
+          </div>
+          <div id="download-link" style="display: none">
+            <a
+              id="completed-link"
+              style="display: none"
+              onclick="downloadFile(event)"
+              >Download Pronto!</a
+            >
+          </div>
         </div>
-        <div class="progress-info">
-          <span id="percent">0%</span> | <span id="speed">0 kB/s</span> |
-          <span id="eta">ETA: --</span> |
-          <span id="downloaded">0MB</span>
-        </div>
-        <div id="download-link" style="display: none">
-          <a
-            id="completed-link"
-            style="display: none"
-            onclick="downloadFile(event)"
-            >Download Pronto!</a
-          >
-        </div>
-      </div>
 
-      <!-- Footer -->
-      <footer
-        class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400"
-      >
-        <p>© 2025 MediaFlow - Baixador de Mídia</p>
-      </footer>
+        <div style="margin-top: 3rem;"></div>
+
+        <!-- Desktop App Download Section -->
+        <section class="mt-16 bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 rounded-xl p-6">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <!-- Info -->
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-3">
+                <svg class="h-8 w-8 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">MediaFlow Desktop</h2>
+              </div>
+              <p class="text-gray-600 dark:text-gray-300 mb-4">
+                Versão nativa para Windows com downloads mais rápidos e interface moderna
+              </p>
+              <div class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  Interface Nativa
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  Downloads Rápidos
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  Sem Limitações
+                </span>
+              </div>
+            </div>
+
+            <!-- Download Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700 min-w-[280px]">
+              <div class="text-center ml-2 mr-2 mt-10">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-10">
+                  Windows • 57MB • v1.0
+                </h3>
+                
+                <div class="text-xs text-gray-600 dark:text-gray-400 mb-4">
+                  <div>Sistema: Windows 10/11</div>
+                  <div>RAM: 4GB+</div>
+                </div>
+                
+                <button
+                  id="download-desktop-btn"
+                  class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  onclick="downloadDesktopApp()"
+                >
+                  <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>Baixar Agora</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer
+          class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400"
+        >
+          <p>© 2025 MediaFlow - Baixador de Mídia</p>
+        </footer>
     </div>
 
     <script>
@@ -2065,6 +2132,83 @@
       document
         .getElementById("download-btn")
         .addEventListener("click", startDownload);
+      
+      // Função para download do aplicativo desktop
+      function downloadDesktopApp() {
+        const downloadBtn = document.getElementById('download-desktop-btn');
+        const originalText = downloadBtn.innerHTML;
+        
+        // Mostra estado de carregamento
+        downloadBtn.innerHTML = `
+          <div class="flex items-center justify-center space-x-2">
+            <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Baixando...</span>
+          </div>
+        `;
+        downloadBtn.disabled = true;
+        
+        // Adiciona classe de loading ao botão
+        downloadBtn.classList.add('opacity-75', 'cursor-not-allowed');
+        
+        // Simula progresso de download
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+          progress += Math.random() * 15;
+          if (progress >= 90) {
+            clearInterval(progressInterval);
+          }
+        }, 200);
+        
+        // Cria um link temporário para download
+        const link = document.createElement('a');
+        link.href = '/download-desktop/';
+        link.download = 'MediaFlow.exe';
+        link.style.display = 'none';
+        
+        // Adiciona evento de sucesso
+        link.addEventListener('click', () => {
+          setTimeout(() => {
+            clearInterval(progressInterval);
+            
+            // Mostra sucesso
+            downloadBtn.innerHTML = `
+              <div class="flex items-center justify-center space-x-2">
+                <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Baixado!</span>
+              </div>
+            `;
+            downloadBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            downloadBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+            
+            // Restaura o botão após 2 segundos
+            setTimeout(() => {
+              downloadBtn.innerHTML = originalText;
+              downloadBtn.disabled = false;
+              downloadBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+              downloadBtn.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-purple-600', 'hover:from-indigo-700', 'hover:to-purple-700');
+            }, 2000);
+          }, 1000);
+        });
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Fallback caso o download não inicie
+        setTimeout(() => {
+          if (downloadBtn.disabled) {
+            clearInterval(progressInterval);
+            downloadBtn.innerHTML = originalText;
+            downloadBtn.disabled = false;
+            downloadBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+          }
+        }, 10000);
+      }
       
     </script>
     <script>

@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import JsonResponse, StreamingHttpResponse
+from django.http import JsonResponse, StreamingHttpResponse, HttpResponse
+from django.views.static import serve
 import yt_dlp as youtube_dl
 import os
 import urllib
@@ -486,3 +487,39 @@ def find_format_id(formats, target_resolution, target_extension, target_vcodec):
         return None
   
     return matching_formats[0]['format_id']
+
+def download_desktop_app(request):
+    """
+    View para download do aplicativo desktop MediaFlow
+    """
+    # Caminho para o executável do MediaFlow
+    desktop_app_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'Versão DeskTop',
+        'CodigoDaInterface',
+        'dist',
+        'MediaFlow',
+        'MediaFlow.exe'
+    )
+    
+    print(f"Tentando acessar arquivo: {desktop_app_path}")
+    print(f"Arquivo existe: {os.path.exists(desktop_app_path)}")
+    
+    # Verifica se o arquivo existe
+    if not os.path.exists(desktop_app_path):
+        print(f"Arquivo não encontrado: {desktop_app_path}")
+        return JsonResponse({
+            'error': 'Aplicativo desktop não encontrado'
+        }, status=404)
+    
+    try:
+        # Usa o serve do Django para arquivos estáticos
+        return serve(request, 'MediaFlow.exe', os.path.dirname(desktop_app_path))
+        
+    except Exception as e:
+        print(f"Erro ao processar arquivo: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({
+            'error': f'Erro ao servir o arquivo: {str(e)}'
+        }, status=500)
