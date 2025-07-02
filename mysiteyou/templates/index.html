@@ -1424,7 +1424,7 @@
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">MediaFlow Desktop</h2>
               </div>
               <p class="text-gray-600 dark:text-gray-300 mb-4">
-                Versão nativa para Windows com downloads mais rápidos e interface moderna
+                Versão nativa para Windows em arquivo RAR compactado. Extraia e execute!
               </p>
               <div class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
                 <span class="flex items-center gap-1">
@@ -1452,12 +1452,15 @@
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700 min-w-[280px]">
               <div class="text-center ml-2 mr-2 mt-10">
                 <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-10">
-                  Windows • 57MB • v1.0
+                                          Windows • 48MB • v1.0
                 </h3>
                 
                 <div class="text-xs text-gray-600 dark:text-gray-400 mb-4">
                   <div>Sistema: Windows 10/11</div>
                   <div>RAM: 4GB+</div>
+                  <div class="mt-2 text-blue-600 dark:text-blue-400">
+                    📦 Extraia o RAR e execute MediaFlow.exe
+                  </div>
                 </div>
                 
                 <button
@@ -2165,7 +2168,7 @@
         // Cria um link temporário para download
         const link = document.createElement('a');
         link.href = '/download-desktop/';
-        link.download = 'MediaFlow.exe';
+        link.download = 'MediaFlow_Desktop.rar';
         link.style.display = 'none';
         
         // Adiciona evento de sucesso

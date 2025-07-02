@@ -490,16 +490,14 @@ def find_format_id(formats, target_resolution, target_extension, target_vcodec):
 
 def download_desktop_app(request):
     """
-    View para download do aplicativo desktop MediaFlow
+    View para download do aplicativo desktop MediaFlow (arquivo RAR)
     """
-    # Caminho para o executável do MediaFlow
+    # Caminho para o arquivo RAR do MediaFlow
     desktop_app_path = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
         'Versão DeskTop',
         'CodigoDaInterface',
-        'dist',
-        'MediaFlow',
-        'MediaFlow.exe'
+        'MediaFlow.rar'
     )
     
     print(f"Tentando acessar arquivo: {desktop_app_path}")
@@ -514,7 +512,7 @@ def download_desktop_app(request):
     
     try:
         # Usa o serve do Django para arquivos estáticos
-        return serve(request, 'MediaFlow.exe', os.path.dirname(desktop_app_path))
+        return serve(request, 'MediaFlow.rar', os.path.dirname(desktop_app_path))
         
     except Exception as e:
         print(f"Erro ao processar arquivo: {str(e)}")
