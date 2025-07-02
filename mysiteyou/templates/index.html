@@ -988,6 +988,18 @@
         pointer-events: none;
         display: none;
       }
+
+      /* Modal já usa classes do Tailwind, mas se não usar, adicione: */
+      #limit-modal { 
+        display: none; 
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+      }
+      #limit-modal.show { display: flex; }
     </style>
   </head>
   <body
@@ -1481,6 +1493,8 @@
           </div>
         </section>
 
+        
+
         <!-- Footer -->
         <footer
           class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400"
@@ -1488,6 +1502,42 @@
           <p>© 2025 MediaFlow - Baixador de Mídia</p>
         </footer>
     </div>
+
+    <!-- Modal de Limite de Tamanho -->
+    <div id="limit-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90" style="z-index:99999999; display: none;">
+      <div class="bg-white dark:bg-gray-900 rounded-lg p-10 max-w-2xl w-full text-center shadow-2xl">
+        <h2 class="text-2xl font-bold mb-6 text-red-600">⚠️ Limitação do Servidor</h2>
+        <p class="mb-4 text-gray-700 dark:text-gray-200 text-lg">
+          Por limitação do servidor gratuito, só é possível baixar vídeos de até <b class="text-red-600">250MB</b>.
+        </p>
+        
+        <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg mb-6">
+          <h3 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">📺 Resoluções disponíveis para este vídeo:</h3>
+          <ul id="resolutions-list" class="text-blue-700 dark:text-blue-300 font-semibold text-left list-disc list-inside"></ul>
+        </div>
+        
+        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 p-4 rounded-lg mb-6">
+          <p class="text-indigo-800 dark:text-indigo-200 font-semibold mb-3">
+            🚀 Para baixar vídeos sem limites, experimente nosso aplicativo desktop!
+          </p>
+          <a href="#desktop" class="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105">
+            📥 Baixar App Desktop
+          </a>
+        </div>
+        
+        <button onclick="closeLimitModal()" class="px-6 py-3 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors duration-300 font-semibold">
+          ✅ Entendi
+        </button>
+      </div>
+    </div>
+
+    <script>
+    function closeLimitModal() {
+      document.getElementById('limit-modal').style.display = 'none';
+    }
+    </script>
+
+
 
     <script>
   function ajustarLayoutPorResolucao() {
@@ -1634,6 +1684,8 @@
 
             // Atualiza a seleção visual
             updateMediaSelection(true);
+            console.log(data.formats)
+            showLimitModal(data.formats);
           } catch (error) {
             console.error("Erro detalhado:", error);
             let errorMessage = "Erro ao processar a requisição";
@@ -2241,6 +2293,41 @@
         visibility: hidden;
       "
     ></iframe>
-    <script></script>
+    <script>
+      function showLimitModal(formats) {
+  try {
+    // Filtra resoluções abaixo de 250MB
+    const maxSize = 250 * 1024 * 1024; // 250MB em bytes
+    const allowed = formats
+      .filter(f => f.filesize && f.filesize <= maxSize)
+      .sort((a, b) => b.height - a.height) // Ordena por resolução (maior primeiro)
+      .map(f => `<li>${f.height}p (${(f.filesize/1024/1024).toFixed(1)}MB)</li>`);
+    
+    const list = allowed.length ? allowed.join('') : '<li class="text-red-600">Nenhuma resolução disponível dentro do limite</li>';
+
+    const resolutionsList = document.getElementById('resolutions-list');
+    if (resolutionsList) {
+      resolutionsList.innerHTML = list;
+    }
+
+    const modal = document.getElementById('limit-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      console.log('Modal mostrado com sucesso');
+    } else {
+      console.error('Modal não encontrado');
+    }
+  } catch (error) {
+    console.error('Erro ao mostrar modal:', error);
+  }
+}
+
+function closeLimitModal() {
+  document.getElementById('limit-modal').classList.add('hidden');
+}
+    </script>
+
+    
+
   </body>
 </html>

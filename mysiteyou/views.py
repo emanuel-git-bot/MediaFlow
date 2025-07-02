@@ -276,14 +276,21 @@ def get_video_info_view(request):
                     return True
                 else:
                     False
-                
-            video_formats = [f for f in formats if f.get('vcodec') != 'none']
-            for i in range(0, len(video_formats)): 
-                resolucion = video_formats[i]['height']   
+            video_formatse = [f for f in formats if f.get('vcodec') != 'none']
+            for i in range(0, len(video_formatse)): 
+                resolucion = video_formatse[i]['height']   
                 if verificar(lista_Resolucion, resolucion):
                     pass
                 else:
-                    lista_Resolucion.append(resolucion)
+                    lista_Resolucion.append(resolucion)    
+            video_formats = []
+            for f in formats:
+                if f.get('vcodec') != 'none':
+                    video_formats.append({
+                        'height': f.get('height'),
+                        'filesize': f.get('filesize') or f.get('filesize_approx') or 0,
+                        # ... outros campos ...
+                    })
 
             print(lista_Resolucion) 
             
