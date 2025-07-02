@@ -1405,7 +1405,8 @@
               id="completed-link"
               style="display: none"
               onclick="downloadFile(event)"
-              >Download Pronto!</a
+              class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200"
+              >📥 Clique aqui para baixar</a
             >
           </div>
         </div>
@@ -2029,17 +2030,10 @@
                     break;
 
                   case "completed":
+                    updateProgress({ ...data, percent: 100 });
                     
-                  updateProgress({ ...data, percent: 100 });
-            // Cria o link invisível para download
-            const tempLink = document.createElement('a');
-            tempLink.href = data.download_url;
-            tempLink.setAttribute('download', '');
-            tempLink.style.display = 'none';
-            document.body.appendChild(tempLink);
-            tempLink.click();
-            document.body.removeChild(tempLink);
-            eventSource.close();
+                    // Download concluído - apenas fecha a conexão
+                    eventSource.close();
                     
                       break;
                   case "error":
@@ -2109,7 +2103,10 @@
         if (downloadLink && completedLink) {
             downloadLink.style.display = 'block';
             completedLink.style.display = 'block';
-            completedLink.href = data.download_url;
+            
+            // Cria URL para download direto
+            const downloadUrl = `/download-file/${encodeURIComponent(data.filename)}`;
+            completedLink.href = downloadUrl;
             
             // Adiciona uma animação suave para o link
             completedLink.style.opacity = '0';
@@ -2119,16 +2116,8 @@
             }, 100);
         }
         
-        // Inicia o download automaticamente
-        if (data.download_url) {
-            const tempLink = document.createElement('a');
-            tempLink.href = data.download_url;
-            tempLink.setAttribute('download', '');
-            tempLink.style.display = 'none';
-            document.body.appendChild(tempLink);
-            tempLink.click();
-            document.body.removeChild(tempLink);
-        }
+        // Download automático desabilitado - apenas mostra o link
+        // O usuário pode clicar no link para baixar manualmente
     }
 }
       // Adiciona o event listener para o botão de download

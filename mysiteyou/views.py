@@ -16,8 +16,6 @@ from django.views.static import serve
 import re 
 from django.http import FileResponse
 import hashlib
-from botocore.client import Config
-import boto3
 from django.conf import settings
 
 # Diretório para salvar os downloads
@@ -27,20 +25,30 @@ os.makedirs(DOWNLOADS_DIR, exist_ok=True)
 # Fila para armazenar atualizações de progresso
 progress_queue = queue.Queue()
 
+def cleanup_old_files():
+    """Remove arquivos antigos da pasta downloads (mais de 1 hora)"""
+    try:
+        current_time = time.time()
+        for filename in os.listdir(DOWNLOADS_DIR):
+            file_path = os.path.join(DOWNLOADS_DIR, filename)
+            if os.path.isfile(file_path):
+                file_age = current_time - os.path.getmtime(file_path)
+                # Remove arquivos com mais de 1 hora
+                if file_age > 3600:  # 3600 segundos = 1 hora
+                    try:
+                        os.remove(file_path)
+                        print(f"Arquivo antigo removido: {filename}")
+                    except Exception as e:
+                        print(f"Erro ao remover arquivo antigo {filename}: {e}")
+    except Exception as e:
+        print(f"Erro na limpeza automática: {e}")
+
 def index(request):
+    # Executa limpeza automática de arquivos antigos
+    cleanup_old_files()
     return render(request, 'index.html')
 
-def get_storj_client():
-    return boto3.client(
-        's3',
-        endpoint_url=settings.STORJ_CONFIG['ENDPOINT_URL'],
-        aws_access_key_id=settings.STORJ_CONFIG['ACCESS_KEY'],
-        aws_secret_access_key=settings.STORJ_CONFIG['SECRET_KEY'],
-        config=Config(
-            signature_version='s3v4',
-            s3={'addressing_style': 'path'}
-        )
-    )
+# Função removida - não mais necessária sem boto3
 
 def generate_safe_filename(original_filename):
     # Gera um hash único baseado no nome original
@@ -161,29 +169,74 @@ def sanitize_filename(filename):
     else:
         return f"{safe_base}{ext}"
 
-# Adicione esta nova view para servir os arquivos baixados
+# View para download direto com limpeza automática
 def download_file(request, filename):
     decoded_name = urllib.parse.unquote(filename)
     file_path = os.path.join(DOWNLOADS_DIR, decoded_name)
     
-    # Se o arquivo não for encontrado, tenta encontrar sem o sufixo .fXXX
+    print(f"Procurando arquivo: {decoded_name}")
+    print(f"Caminho completo: {file_path}")
+    print(f"Arquivo existe: {os.path.exists(file_path)}")
+    print(f"Arquivos na pasta: {os.listdir(DOWNLOADS_DIR)}")
+    
+    # Se o arquivo não for encontrado, procura por arquivos similares
     if not os.path.exists(file_path):
-        # Procura por arquivos que correspondam ao padrão (nome base + qualquer sufixo .fXXX + extensão)
+        print("Arquivo não encontrado, procurando alternativas...")
+        
+        # Lista todos os arquivos no diretório
+        all_files = os.listdir(DOWNLOADS_DIR)
+        print(f"Arquivos na pasta: {all_files}")
+        
+        # Procura por arquivos que correspondam ao padrão
         base_name = re.sub(r'\.f\d+\.', '.', decoded_name)
         base_name_without_ext = os.path.splitext(base_name)[0]
         ext = os.path.splitext(base_name)[1]
         
-        # Lista todos os arquivos no diretório
-        for file in os.listdir(DOWNLOADS_DIR):
-            if file.startswith(base_name_without_ext) and file.endswith(ext):
+        print(f"Procurando por: {base_name_without_ext}*{ext}")
+        
+        # Busca simples - procura por arquivos que contenham o nome base
+        for file in all_files:
+            if base_name_without_ext.lower() in file.lower() and file.endswith(ext):
                 file_path = os.path.join(DOWNLOADS_DIR, file)
+                print(f"Arquivo encontrado: {file}")
                 break
     
     if os.path.exists(file_path):
-        response = FileResponse(open(file_path, 'rb'))
-        response['Content-Disposition'] = f'attachment; filename="{decoded_name}"'
-        return response
+        try:
+            print(f"Servindo arquivo: {file_path}")
+            
+            # Lê o arquivo em memória
+            with open(file_path, 'rb') as f:
+                file_content = f.read()
+            
+            # Cria a resposta HTTP
+            response = HttpResponse(file_content, content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{decoded_name}"'
+            response['Content-Length'] = len(file_content)
+            
+            # Agenda a remoção do arquivo após o download
+            def delete_file_after_download():
+                import time
+                time.sleep(2)  # Aguarda 2 segundos para garantir que o download iniciou
+                try:
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                        print(f"Arquivo removido automaticamente: {file_path}")
+                except Exception as e:
+                    print(f"Erro ao remover arquivo: {e}")
+            
+            # Inicia thread para remoção automática
+            cleanup_thread = threading.Thread(target=delete_file_after_download)
+            cleanup_thread.daemon = True
+            cleanup_thread.start()
+            
+            return response
+            
+        except Exception as e:
+            print(f"Erro ao servir arquivo: {e}")
+            return JsonResponse({'error': 'Erro ao processar arquivo'}, status=500)
     
+    print(f"Arquivo não encontrado: {decoded_name}")
     return JsonResponse({'error': 'Arquivo não encontrado'}, status=404)
 
 @require_http_methods(["GET"])
@@ -192,8 +245,15 @@ def get_video_info_view(request):
     if not url:
         return JsonResponse({'error': 'URL não fornecida'}, status=400)
 
+    ydl_opts = {
+            'noplaylist': True,  # Esta opção é crucial para focar apenas no vídeo individual
+            'quiet': True,       # Suprime a saída de logs do yt-dlp para o console (opcional, mas útil em apps web)
+            # Pode ser útil para extrair informações básicas rapidamente sem baixar tudo
+                                 # No entanto, 'extract_info' sem download=False já faz isso
+            'force_generic_extractor': False, # Geralmente não é necessário alterar, mas pode ser útil para depuração
+        }
     try:
-        with youtube_dl.YoutubeDL() as ydl:
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
             
             # Extrai título
@@ -259,9 +319,14 @@ def download(request):
                 progress_queue.get_nowait()
             except queue.Empty:
                 break
+        
+        ydl_info_opts = {
+            'noplaylist': True,  # Adicione noplaylist aqui para a extração inicial de info
+            'quiet': True,
+        }
 
         # Primeiro, obtém as informações do vídeo para pegar o título e formatos
-        with youtube_dl.YoutubeDL() as ydl:
+        with youtube_dl.YoutubeDL(ydl_info_opts) as ydl:
             info = ydl.extract_info(url, download=False)
             title = info.get('title', 'video')
             formats = info.get('formats', [])
@@ -293,8 +358,9 @@ def download(request):
                     format_spec = f'{format_id}+bestaudio[ext=m4a]/best[ext=mp4]/best'
                     
                     ydl_opts = {
-                        'restrictfilenames': True,
-                        'windowsfilenames': True,
+                        'restrictfilenames': False,  # Desabilita para manter nome original
+                        'windowsfilenames': False, 
+                        'noplaylist': True,  # Desabilita para manter nome original
                         'format': format_spec,
                         'outtmpl': output_path,
                         'merge_output_format': extension.lower() if extension else 'mp4',
@@ -310,8 +376,9 @@ def download(request):
                     }.get(resolution.lower(), 'bestaudio')
 
                     ydl_opts = {
-                        'restrictfilenames': True,
-                        'windowsfilenames': True,
+                        'restrictfilenames': False,  # Desabilita para manter nome original
+                        'windowsfilenames': False,
+                        'noplaylist': True,   # Desabilita para manter nome original
                         'format': audio_format,
                         'outtmpl': output_path,
                         'postprocessors': [{
@@ -325,62 +392,40 @@ def download(request):
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     ydl.download([url])
                 
-                novo_path_destine = ""
-                novo_safe_filename = ""
+                # Determina o caminho final do arquivo
+                final_path = ""
+                final_filename = ""
                 if download_type == "audio":
-                    print("<<<<<<<<<<<",output_path)
-                    novo_path_destine = f'{output_path}.mp3'
-                    novo_safe_filename = f'{safe_filename}.mp3'
-                    print("<<<<<<<<<<<",output_path)
+                    final_path = f'{output_path}.mp3'
+                    final_filename = f'{safe_filename}.mp3'
                 else: 
-                    novo_path_destine = f'{output_path}'
-                    novo_safe_filename = f'{safe_filename}'
+                    final_path = f'{output_path}'
+                    final_filename = f'{safe_filename}'
 
-
-                 # === NOVO: Upload para o Storj ===
-                storj = get_storj_client()
-                
-                # Faz upload do arquivo
-                with open(novo_path_destine, 'rb') as file_data:
-                    file_content = file_data.read()
-                    storj.put_object(
-                        Bucket=settings.STORJ_CONFIG['BUCKET_NAME'],
-                        Key=novo_safe_filename,
-                        Body=file_content,
-                        ContentLength=len(file_content)
-                    )
-
-                print("ubaibaubaubaubaubauba")
-                
-                # Gera URL pública
-                public_url = storj.generate_presigned_url(
-                    'get_object',
-                    Params={
-                        'Bucket': settings.STORJ_CONFIG['BUCKET_NAME'],
-                        'Key': novo_safe_filename
-                    },
-                    ExpiresIn=604800  # 7 dias
-                )
-
-                # Atualiza o progresso com a URL do Storj
-                progress_queue.put({
-                    'status': 'completed',
-                    'filename': novo_safe_filename,
-                    'download_url': public_url,
-                    'percent': 100.0,
-                    'is_final': True,
-                    'speed': 'Completo',
-                    'eta': 'Concluído',
-                    'downloaded_mb': 'Finalizado',
-                    'total_mb': 'Finalizado'
-                })
-
-                # Remove arquivo local
-                if os.path.exists(novo_path_destine):
-                    os.remove(novo_path_destine)
-                    print('removi', novo_path_destine , "com sucesso!!!")
+                # Verifica se o arquivo foi criado
+                if os.path.exists(final_path):
+                    print(f"Download concluído: {final_path}")
+                    print(f"Nome do arquivo final: {final_filename}")
+                    
+                    # Atualiza o progresso com sucesso
+                    progress_queue.put({
+                        'status': 'completed',
+                        'filename': final_filename,
+                        'file_path': final_path,
+                        'percent': 100.0,
+                        'is_final': True,
+                        'speed': 'Completo',
+                        'eta': 'Concluído',
+                        'downloaded_mb': 'Finalizado',
+                        'total_mb': 'Finalizado'
+                    })
                 else:
-                    print("ele não existe!!!!")
+                    # Lista arquivos na pasta para debug
+                    print(f"Arquivo não encontrado em: {final_path}")
+                    print("Arquivos na pasta downloads:")
+                    for file in os.listdir(DOWNLOADS_DIR):
+                        print(f"  - {file}")
+                    raise Exception("Arquivo não foi criado após o download")
 
             except Exception as e:
                 progress_queue.put({
@@ -391,17 +436,15 @@ def download(request):
         thread = threading.Thread(target=download_thread)
         thread.start()
 
+        # Determina o nome do arquivo final
         if download_type == "audio":
-            print("<<<<<<<<<<<",output_path)     
-            novo_safe_filename = f'{safe_filename}.mp3'
-            print("<<<<<<<<<<<",output_path)
+            final_filename = f'{safe_filename}.mp3'
         else:    
-            novo_safe_filename = f'{safe_filename}'
-
+            final_filename = f'{safe_filename}'
 
         return JsonResponse({
             'status': 'download_started',
-            'filename': novo_safe_filename
+            'filename': final_filename
         })
 
     except Exception as e:
