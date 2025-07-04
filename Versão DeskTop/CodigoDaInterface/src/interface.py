@@ -115,7 +115,7 @@ class MediaFlowApp(ctk.CTk):
     def get_video_info(self, url):
         try:
             # ... (Lógica de busca com yt-dlp) ...
-            ydl_opts = {'quiet': True}
+            ydl_opts = {'quiet': True, 'noplaylist': True,}
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 self.info_data = ydl.extract_info(url, download=False)
             
@@ -261,6 +261,7 @@ class MediaFlowApp(ctk.CTk):
                 ydl_opts = {
                     'format': format_selector,
                     'ffmpeg_location': get_ffmpeg_path(),
+                    'noplaylist': True,
                     'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
                     'merge_output_format': ext,
                     'progress_hooks': [self.progress_hook],
@@ -272,6 +273,7 @@ class MediaFlowApp(ctk.CTk):
                 ydl_opts = {
                     'format': f'bestaudio[ext={ext}]/bestaudio',
                     'ffmpeg_location': get_ffmpeg_path(),
+                    'noplaylist': True,
                     'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
                     'postprocessors': [{
                         'key': 'FFmpegExtractAudio',
