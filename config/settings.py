@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-fp2@8jixnjg-!t*m_o)g0wd_k7e*4eyin_1a#6($%b1=$^6f_!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://mediaflow-ben0.onrender.com']
+ALLOWED_HOSTS = ['mediaflow-ben0.onrender.com']
 
 
 # Application definition
