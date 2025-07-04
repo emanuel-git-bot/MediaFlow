@@ -1,5 +1,0 @@
-customtkinter
-yt-dlp
-Pillow
-requests
-pyinstaller>=6.0.0
